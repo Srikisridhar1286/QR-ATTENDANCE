@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    /* Wrapper to hold background image */
+    .background-img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+    }
+
+    .background-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff7f0;
+    }
+
+    .ribbon {
+      background-color: #ff6f0054;
+      height: 80px;
+      width: 100%;
+      position: relative-fixed;
+      margin-top: 0%;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 0 0 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.78);
+    }
+
+    .ribbon-logo {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 60px;
+      /* Increased from 50px */
+      max-width: px;
+      /* Increased from 100px */
+      object-fit: 200px contain;
+      transition: all 0.3s ease;
+      /* Smooth hover effect */
+    }
+
+    /* Optional hover effect */
+    .ribbon-logo:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .ribbon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.1) 100%);
+      border-radius: 0 0 8px 8px;
+    }
+
+    .ribbon-text {
+      color: #ffffff;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(33, 33, 33, 0.3);
+      letter-spacing: 1.5px;
+      position: relative;
+      z-index: 1;
+      
+      /* Responsive font size using clamp() */
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      
+      /* Alternative responsive approach using media queries */
+      /*
+      font-size: 1rem; 
+      @media (min-width: 480px) { font-size: 1.1rem; }
+      @media (min-width: 768px) { font-size: 1.3rem; }
+      @media (min-width: 1024px) { font-size: 1.5rem; }
+      */
+      
+      /* Padding adjustments for smaller screens */
+      padding: 0 10px;
+      @media (min-width: 768px) {
+        padding: 0 20px;
+      }
+      
+      /* Line-height for better text wrapping */
+      line-height: 1.3;
+    }
+
+    /* Navigation buttons in ribbon */
+    .ribbon-nav {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .ribbon-btn {
+      background-color: rgba(255, 167, 38, 0.7);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .ribbon-btn:hover {
+      background-color: rgba(255, 167, 38, 0.9);
+      transform: translateY(-2px);
+    }
+
+    .ribbon-btn.active {
+      background-color: #ff6f00;
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* Rest of your existing CSS remains exactly the same... */
+    .tablinks.active {
+      background-color: #ff6f00;
+      color: #000;
+    }
+
+    .tablinks.active {
+      background-color: #ff6f00;
+      /* Deep Orange */
+      color: #000;
+    }
+
+    .tablinks {
+      transition: all 0.3s ease;
+      background-color: #ffe0b2;
+      /* Light orange */
+      color: #333;
+    }
+
+    .tabcontent {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-card {
+      background: rgba(255, 223, 186, 0.381);
+      /* light orange tone */
+      color: #000;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 167, 38, 0.2);
+      margin-top: 100px;
+      border-radius: 45px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.78);
+      padding: 20px;
+    }
+
+    .glass-input {
+      background: rgba(255, 193, 7, 0.1);
+      color: #000;
+      border: 1px solid #ffcc80;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .gradient-btn {
+      background-color: #fb8c00;
+      /* Solid orange */  
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .gradient-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(255, 138, 101, 0.3);
+    }
+
+    .gradient-btn:active {
+      transform: scale(0.97);
+    }
+
+    .reset-btn {
+      background-color: #ff7043;
+      /* Coral-orange */
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
+    }
+
+    .checkbox-cell {
+      width: 20px;
+    }
+
+    /* --------------------------*/
+    .subject-select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid #ecab4a;
+      border-radius: 45px;
+      background-color: rgba(193, 192, 191, 0);;
+      color: #333;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: 
+        linear-gradient(45deg, transparent 50%, #ff6f00 50%),
+        linear-gradient(135deg, #ff6f00 50%, transparent 50%);
+      background-position:
+        calc(100% - 15px) 50%,
+        calc(100% - 10px) 50%;
+      background-size:
+        5px 5px,
+        5px 5px;
+      background-repeat: no-repeat;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  
+    .subject-select:focus {
+      outline: none;
+      border-radius: 45px;
+      border-color: #ff6f00;
+      box-shadow: 0 0 0 2px rgba(255, 111, 0, 0.2);
+    }
+  
+    .subject-select option {
+      background-color: #fff3e0;
+      color: #333;
+    }
+  
+    .subject-select option:checked {
+      background-color: #ffe0b2;
+      color: #000;
+    }
+  
+    /* For dark mode compatibility */
+    @media (prefers-color-scheme: dark) {
+      .subject-select {
+        background-color: rgba(75, 85, 99, 0.8);
+        color: #fff;
+        border-color: #ff9e3f;
+      }
+      .subject-select option {
+        background-color: #4b5563;
+        color: #fff;
+      }
+    }
+
+    /* ---- attendance register styles ---- */
+    #attendanceRegisterContainer {
+      background: #f0f0f055;
+      border-radius: 25px;
+      padding: 16px;
+      margin-top: 16px;
+      color: #4b4a4a;
+      border: none;
+      box-shadow: 
+        -4px -4px 8px #4e4e4e,
+        4px 4px 8px #a7a7a7,
+        inset 0 0 0 transparent,
+        inset 0 0 0 transparent;
+      transition: all 0.3s ease;
+    }
+    
+    #attendanceRegisterContainer:hover {
+      box-shadow: 
+        4px 4px 8px #898888,
+        -4px -4px 8px #434343,
+        inset 2px 2px 4px #d9d9d9,
+        inset -2px -2px 4px #262626;
+    }
+    
+    #attendanceRegisterContainer p {
+      color: #6b6b6b;
+      font-size: 14px;
+      text-align: center;
+      margin: 0;
+      padding: 8px 0;
+      font-weight: 500;
+      text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="ribbon">
+    <!-- Logo added here -->
+    <img
+      src="https://res.cloudinary.com/df8enyk6y/image/upload/v1748614650/SELF%20ATTENDANCE%20SYSTEM/xp9elrigr47y2at1qbau.png"
+      alt="University Logo" class="ribbon-logo">
+    <div class="ribbon-text">BENGALURU CITY UNIVERSITY</div>
+
+    <!-- Navigation buttons in ribbon -->
+    <div class="ribbon-nav">
+      <button class="ribbon-btn active" onclick="openTabFromNav('MarkAttendance')">Generate QR</button>
+      <button class="ribbon-btn" onclick="openTabFromNav('ViewAttendance')">View Attendance</button>
+      <button class="ribbon-btn" onclick="openTabFromNav('ManageStudents')">Manage Students</button>
+    </div>
+  </div>
+
+  <div class="background-img">
+    <img
+      src="https://res.cloudinary.com/dculkxzc1/image/upload/v1748635407/vecteezy_abstract-background-with-flowing-golden-sand-hues_60610322_nlsrcw.jpg"
+      alt="Background" />
+  </div>
+
+
+  <div class="max-w-4xl mx-auto glass-card rounded-2xl p-6 shadow-xl">
+
+    <!-- Tab Buttons (hidden since we're using ribbon navigation) -->
+    <div class="flex gap-2 mb-6" style="display: none;">
+      <button class="tablinks active flex-1 px-4 py-2 rounded-lg text-sm gradient-btn"
+        onclick="openTab(event, 'MarkAttendance')">Generate QR</button>
+      <button class="tablinks flex-1 px-4 py-2 rounded-lg text-sm gradient-btn"
+        onclick="openTab(event, 'ViewAttendance')">View Attendance</button>
+      <button class="tablinks flex-1 px-4 py-2 rounded-lg text-sm gradient-btn"
+        onclick="openTab(event, 'ManageStudents')">Manage Students</button>
+    </div>
+
+    <!-- Mark Attendance Tab -->
+    <div id="MarkAttendance" class="tabcontent block">
+     <center><h2 class=" text-xl font-semibold mb-4">Generate Attendance QR Code</h2></center>
+
+      <form id="qr-generator-form" class="space-y-4">
+        <div>
+          <label for="date" class="block text-sm mb-1">Date:</label>
+          <input type="date" id="date" required
+            class="w-full p-2 text-white glass-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500">
+        </div>
+
+        <div class=>
+          <label for="subject" class="block text-sm mb-1 font-medium text-gray-700">Select Subject:</label>
+          <select id="subject" required class="subject-select">
+            <option value="">-- Select Subject --</option>
+            <option value="ML">Machine Learning</option>
+            <option value="Software Testing">Software Testing</option>
+            <option value="MAD">Mobile App Development</option>
+            <option value="ECD">Embedded Computing & Design</option>
+          </select> 
+        </div>
+
+        <button type="submit"
+          class="w-full py-2 rounded-lg gradient-btn text-sm font-medium hover:opacity-90 transition-opacity">
+          Generate QR Code
+        </button>
+      </form>
+
+      <div id="qr-container" class="mt-6 text-center hidden">
+        <p class="mb-3 text-sm text-gray-300">Scan this QR code to mark attendance:</p>
+        <img id="qr-image" class="mx-auto w-48 h-48 border-4 border-white rounded-lg">
+        <p class="mt-3 text-xs text-gray-400">QR expires when closed. Students can only submit once per session.</p>
+      </div>
+    </div>
+
+    <!-- View Attendance Tab -->
+    <!-- Replace the View Attendance tab content with this -->
+    <div id="ViewAttendance" class="tabcontent hidden">
+      <h2 class="text-xl text-black font-semibold mb-4">View Attendance</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="subjectSelect" class="block text-black text-sm mb-1">Select Subject:</label>
+          <select id="subjectSelect" class="w-full p-2 bg-#f5f5dc-900 text-black rounded-lg text-sm">
+            <option value="">-- Select Subject --</option>
+            <option value="ML">Machine Learning</option>
+            <option value="Software Testing">Software Testing</option>
+            <option value="MAD">Mobile App Development</option>
+            <option value="ECD">Embedded Computing & Design</option>
+          </select>
+        </div>
+        <div>
+          <label for="dateSelect" class="block text-sm mb-1">Select Date (optional):</label>
+          <input type="date" id="dateSelect" class="w-full p-2 bg-white-700 text-black rounded-lg text-sm">
+        </div>
+      </div>
+
+      <button onclick="loadRegister()" type="button" class="w-full text-black py-2 rounded-lg text-black text-sm gradient-btn">
+        Load Attendance
+      </button>
+
+      <div id="attendanceRegisterContainer" class="overflow-x-auto mt-4 border rounded-lg shadow bg-gray-900 p-4">
+        <p class="text-white-400 rounded-lg text-center">Only students who have marked attendance will appear
+          here</p>
+      </div>
+    </div>
+
+    <!-- Manage Students Tab -->
+    <div id="ManageStudents" class="tabcontent hidden">
+      <h2 class="text-xl font-semibold mb-4">Manage Students</h2>
+
+      <div class="glass-card p-4 mb-6">
+        <h3 class="text-lg mb-3">Add New Student</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm mb-1">Student ID:</label>
+            <input type="text" id="new-student-id" class="w-full p-2 glass-input rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Name:</label>
+            <input type="text" id="new-student-name" class="w-full p-2 glass-input rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Password:</label>
+            <input type="password" id="new-student-password" class="w-full p-2 glass-input rounded-lg" value="">
+            <p class="text-xs text-gray-400 mt-1">Default: Student ID</p>
+          </div>
+          <div class="flex items-end">
+            <button onclick="addStudent()" class="gradient-btn py-2 px-4 rounded-lg">
+              Add Student
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card p-4">
+        <h3 class="text-lg mb-3">Student List</h3>
+        <table class="w-full table-auto">
+          <thead>
+            <tr class="glass-card p-4s">
+              <th class="p-2 text-left">ID</th>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="student-list"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function openTabFromNav(tabName) {
+      document.querySelectorAll(".tabcontent").forEach(tab => tab.style.display = "none");
+      document.querySelectorAll(".ribbon-btn").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabName).style.display = "block";
+      document.querySelector(`.ribbon-btn[onclick="openTabFromNav('${tabName}')"]`).classList.add("active");
+
+      // Load students when Manage Students tab is opened
+      if (tabName === 'ManageStudents') {
+        fetchStudents();
+      }
+    }
+
+    function openTab(evt, tabName) {
+      document.querySelectorAll(".tabcontent").forEach(tab => tab.style.display = "none");
+      document.querySelectorAll(".tablinks").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.classList.add("active");
+
+      // Also update ribbon buttons
+      document.querySelectorAll(".ribbon-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`.ribbon-btn[onclick="openTabFromNav('${tabName}')"]`).classList.add("active");
+
+      // Load students when Manage Students tab is opened
+      if (tabName === 'ManageStudents') {
+        fetchStudents();
+      }
+    }
+
+    // QR Code Generation
+    document.getElementById('qr-generator-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const date = document.getElementById('date').value;
+      const subject = document.getElementById('subject').value;
+
+      if (!date || !subject) {
+        alert('Please select both date and subject');
+        return;
+      }
+
+      const qrContainer = document.getElementById('qr-container');
+      const qrImage = document.getElementById('qr-image');
+
+      try {
+        // Generate fresh QR code with current timestamp
+        const params = new URLSearchParams({
+          date,
+          subject,
+          t: Date.now() // Add current timestamp
+        });
+        qrImage.src = `/teacher/generate-qr?${params}`;
+
+        qrContainer.classList.remove('hidden');
+        qrImage.classList.remove('hidden');
+        qrImage.classList.add('animate-pulse');
+
+        // Handle loading errors
+        qrImage.onerror = () => {
+          qrImage.classList.add('hidden');
+          showQRError();
+        };
+
+      } catch (error) {
+        console.error('QR generation failed:', error);
+        alert('Error generating QR code');
+      }
+    });
+
+    function showQRError() {
+      const qrContainer = document.getElementById('qr-container');
+      qrContainer.innerHTML = `
+        <div class="text-red-500 p-4 text-center">
+          Failed to generate QR code. Please try again.
+        </div>
+      `;
+    }
+
+    // View Attendance Functions
+    async function loadRegister() {
+      const subject = document.getElementById('subjectSelect').value;
+      const date = document.getElementById('dateSelect').value;
+
+      if (!subject) {
+        alert("Please select a subject.");
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams({ subject });
+        if (date) params.append('date', date);
+
+        const res = await fetch(`/teacher/attendance-register?${params}`);
+        const data = await res.json();
+
+        const { students, subject: subjectName, dates, attendanceMap } = data;
+
+        const container = document.getElementById('attendanceRegisterContainer');
+
+        if (!students || students.length === 0) {
+          container.innerHTML = `<p class="text-center text-black py-4">No attendance records found for ${subjectName}</p>`;
+          return;
+        }
+
+        container.innerHTML = `
+                <h3 class="text-lg mb-4 text-black text-center">Attendance for ${subjectName}</h3>
+                <table class="min-w-full table-auto border border-gray-600 text-black text-xs text-center">
+                    <thead>
+                        <tr class="bg-gray-400">
+                            <th class="p-2 border">Date</th>
+                            <th class="p-2 border">Student ID</th>
+                            <th class="p-2 border">Name</th>
+                            <th class="p-2 border">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody"></tbody>
+                </table>
+            `;
+
+        const tbody = document.getElementById('attendanceTableBody');
+
+        // Group records by date
+        const recordsByDate = {};
+        students.forEach(student => {
+          dates.forEach(date => {
+            if (attendanceMap[date]?.includes(student.studentID)) {
+              if (!recordsByDate[date]) recordsByDate[date] = [];
+              recordsByDate[date].push(student);
+            }
+          });
+        });
+
+        // Sort dates chronologically
+        const sortedDates = Object.keys(recordsByDate).sort();
+
+        // Add rows to table
+        sortedDates.forEach(date => {
+          recordsByDate[date].forEach(student => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                        <td class="p-2 border">${new Date(date).toLocaleDateString()}</td>
+                        <td class="p-2 border">${student.studentID}</td>
+                        <td class="p-2 border">${student.name}</td>
+                        <td class="p-2 border font-medium text-green-500">PRESENT</td>
+                    `;
+            tbody.appendChild(row);
+          });
+        });
+
+      } catch (error) {
+        console.error('Error loading attendance:', error);
+        document.getElementById('attendanceRegisterContainer').innerHTML = `
+                <p class="text-red-500 text-center py-4">Error loading attendance data</p>
+            `;
+      }
+    }
+
+    // Student Management Functions
+    async function fetchStudents() {
+      const tableBody = document.querySelector("#student-list");
+      tableBody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
+
+      try {
+        const res = await fetch('/teacher/students');
+        if (!res.ok) {
+          throw new Error(`Failed to fetch student data. Status: ${res.status}`);
+        }
+
+        const students = await res.json();
+        tableBody.innerHTML = "";
+
+        if (!Array.isArray(students) || students.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='3'>No students found</td></tr>";
+          return;
+        }
+
+        students.forEach(student => {
+          if (!student.studentID || !student.name) return;
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="p-2 border">${student.studentID}</td>
+            <td class="p-2 border">${student.name}</td>
+            <td class="p-2 border text-center">
+              <button class="reset-btn text-white px-3 py-1 rounded text-sm"
+                      onclick="resetPassword('${student.studentID}')">
+                Reset Password
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+      } catch (error) {
+        tableBody.innerHTML = "<tr><td colspan='3' style='color:red;'>Error loading students</td></tr>";
+        console.error("Error fetching students:", error);
+      }
+    }
+
+    async function resetPassword(studentID) {
+      if (!confirm(`Reset password for student ${studentID}? Password will be reset to their student ID.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/teacher/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentID })
+        });
+
+        if (res.ok) {
+          alert('Password reset successfully!');
+        } else {
+          const error = await res.json();
+          alert(`Error: ${error.message}`);
+        }
+      } catch (error) {
+        console.error('Password reset error:', error);
+        alert('Failed to reset password');
+      }
+    }
+
+    async function addStudent() {
+      const studentID = document.getElementById('new-student-id').value;
+      const name = document.getElementById('new-student-name').value;
+      const password = document.getElementById('new-student-password').value;
+
+      if (!studentID || !name) {
+        alert('Student ID and Name are required');
+        return;
+      }
+
+      try {
+        const res = await fetch('/teacher/students', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentID,
+            name,
+            password: password || studentID
+          })
+        });
+
+        if (res.ok) {
+          alert('Student added successfully');
+          document.getElementById('new-student-id').value = '';
+          document.getElementById('new-student-name').value = '';
+          document.getElementById('new-student-password').value = '';
+          fetchStudents(); // Refresh list
+        } else {
+          const error = await res.json();
+          alert(`Error: ${error.message}`);
+        }
+      } catch (error) {
+        console.error('Error adding student:', error);
+        alert('Failed to add student');
+      }
+    }
+
+    // Initialize the page with MarkAttendance tab open
+    document.addEventListener('DOMContentLoaded', function () {
+      openTabFromNav('MarkAttendance');
+    });
+  </script>
+</body>
+
+</html>
